@@ -1,3 +1,11 @@
+const rockBtn = document.querySelector("#rock");
+const paperBtn = document.querySelector("#paper");
+const scissorsBtn = document.querySelector("#scissors");
+const resetBtn =  document.querySelector('#reset-btn');
+let playCount = 5;
+let playerScore = 0;
+let cpuScore = 0;
+let ties = 0;
 function randomChoice(){
     let num = Math.ceil(Math.random() * 10);
     if(num % 3 == 0){
@@ -14,7 +22,7 @@ function play(userChoice){
     switch(userChoice){
         case "rock":
             if(cpuChoice ==  "rock"){
-                return "tie";
+                return "Tie";
             }
             else if(cpuChoice ==  "paper"){
                 return "Player Wins";
@@ -47,46 +55,37 @@ function play(userChoice){
         break;
     }
     return "";
-}
-function loop(){
-    alert(play());
-    should_play_again = prompt("Would you like to play again?")
-    should_play_again = should_play_again.toLowerCase();
-    if (should_play_again === "no"){
-        return;
-    }else{
-        loop();
+}/**
+ * @param string
+ * @returns String
+ */
+function game(type){
+    if(playCount <= 0)
+    {
+        if(playerScore < cpuScore){
+            alert(`Player Lost ${5 - playerScore - ties} / 5 games and Tied ${ties} games`);
+            return "";
+        }
+        else if(playerScore > cpuScore)
+        {
+            alert(`Player Won ${5 - cpuScore - ties} / 5 games and Tied ${ties} games`);
+            return "";
+        }
     }
+    const result = play(type);
+    resultDiv = document.createElement("div");
+    para = document.createElement("p");
+    para.textContent = result;
+    resultDiv.appendChild(para);
+    --playCount;
+    document.body.appendChild(resultDiv);
+    playerScore += result == 'Player Wins' ? 1 : 0;
+    cpuScore += result == 'Player Lost' ? 1 : 0;
+    ties += result == 'Tie' ? 1 : 0;
+    return result;
 }
 
-const rock = document.querySelector("#rock");
-const paper = document.querySelector("#paper");
-const scissors = document.querySelector("#scissors");
-
-rock.addEventListener("click", ()=>{
-    const result = play("rock");
-    resultDiv = document.createElement("div");
-    para = document.createElement("p");
-    para.textContent = result;
-    resultDiv.appendChild(para);
-    document.body.appendChild(resultDiv);
-    console.log(result);
-});
-paper.addEventListener("click", ()=>{
-    const result = play("paper");
-    resultDiv = document.createElement("div");
-    para = document.createElement("p");
-    para.textContent = result;
-    resultDiv.appendChild(para);
-    document.body.appendChild(resultDiv);
-    console.log(result);
-});
-scissors.addEventListener("click", ()=>{
-    const result = play("scissors");
-    resultDiv = document.createElement("div");
-    para = document.createElement("p");
-    para.textContent = result;
-    resultDiv.appendChild(para);
-    document.body.appendChild(resultDiv);
-    console.log(result);
-});
+rockBtn.addEventListener("click", ()=>{ game('rock'); });
+paperBtn.addEventListener("click", ()=>{ game('paper'); });
+scissorsBtn.addEventListener("click", ()=>{ game('scissors'); });
+resetBtn.addEventListener("click", ()=>{ location.replace(location.href)});
